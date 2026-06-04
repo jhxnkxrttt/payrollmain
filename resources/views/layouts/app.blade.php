@@ -20,7 +20,9 @@
     @else
         @if ($cssAsset)
             <link rel="stylesheet" href="{{ asset('build/'.$cssAsset) }}">
-        @elseif (file_exists($fallbackCssPath))
+        @endif
+
+        @if (file_exists($fallbackCssPath))
             <style>
                 {!! file_get_contents($fallbackCssPath) !!}
             </style>
