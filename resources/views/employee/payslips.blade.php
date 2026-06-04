@@ -4,12 +4,34 @@
 @section('page-title', 'My Payslips')
 
 @section('content')
+    <section class="panel chart-panel">
+        <div class="section-header">
+            <div>
+                <h2>Salary Trend</h2>
+                <p>Your net salary across generated payslips.</p>
+            </div>
+        </div>
+
+        @if(($salaryChart['values'] ?? collect())->count())
+            <div class="chart-frame">
+                <canvas
+                    class="salary-line-chart"
+                    data-title="My net salary"
+                    data-labels='@json($salaryChart["labels"])'
+                    data-values='@json($salaryChart["values"])'
+                ></canvas>
+            </div>
+        @else
+            <div class="empty-state compact">No salary history is available yet.</div>
+        @endif
+    </section>
+
     <section class="card-grid">
         @forelse($payslips as $p)
             @php
                 $selectedDeductions = json_decode($p->selected_deductions ?? '[]', true) ?: [];
             @endphp
-            <article class="panel">
+            <article class="panel payslip-panel">
                 <div class="section-header">
                     <div>
                         <h2>Paid {{ $p->paid_date ?? 'Not set' }}</h2>
@@ -51,8 +73,8 @@
                         <dt>Net pay</dt>
                         <dd><strong>PHP {{ number_format($p->net_pay, 2) }}</strong></dd>
                     </div>
-                    <a href="{{ route('payslip.download', $p->id) }}" class="btn btn-primary">
-                    Download PDF
+                    <a href="{{ route('payslip.download', $p->id) }}" class="btn btn-primary full-width">
+                        Download PDF
                     </a>
                 </dl>
             </article>

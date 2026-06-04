@@ -109,7 +109,21 @@ class PayrollController extends Controller
             ->orderBy('payroll.generated_at', 'desc')
             ->get();
 
-        return view('admin.payroll.history', compact('payrolls'));
+        $salarySeries = $payrolls
+            ->sortBy(fn ($pay) => $pay->paid_date ?? $pay->generated_at)
+            ->groupBy('employee_id')
+            ->map(fn ($items) => [
+                'name' => $items->first()->name,
+                'labels' => $items
+                    ->map(fn ($pay) => $pay->paid_date ?? date('Y-m-d', strtotime($pay->generated_at)))
+                    ->values(),
+                'values' => $items
+                    ->map(fn ($pay) => round((float) $pay->net_pay, 2))
+                    ->values(),
+            ])
+            ->values();
+
+        return view('admin.payroll.history', compact('payrolls', 'salarySeries'));
     }
 
     // SHOW SINGLE PAYROLL (API STYLE READY)

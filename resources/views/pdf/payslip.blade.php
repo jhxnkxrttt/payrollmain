@@ -119,6 +119,34 @@
             width:320px;
         }
 
+        .salary-chart{
+            margin-top:28px;
+            padding:18px;
+            border:1px solid #e2e8f0;
+            border-radius:12px;
+            background:#f8fafc;
+        }
+
+        .salary-chart h3{
+            margin-bottom:4px;
+            color:#0f172a;
+            font-size:18px;
+        }
+
+        .salary-chart p{
+            margin-bottom:14px;
+            color:#64748b;
+            font-size:12px;
+        }
+
+        .chart-caption{
+            display:flex;
+            justify-content:space-between;
+            margin-top:10px;
+            color:#64748b;
+            font-size:11px;
+        }
+
         .summary-row{
             display:flex;
             justify-content:space-between;
@@ -249,6 +277,46 @@
             </div>
 
         </div>
+
+        @php
+            $chartValues = collect($salaryChart['values'] ?? []);
+            $chartLabels = collect($salaryChart['labels'] ?? []);
+            $maxValue = max((float) $chartValues->max(), 1);
+            $chartWidth = 720;
+            $chartHeight = 180;
+            $plotTop = 18;
+            $plotBottom = 150;
+            $plotLeft = 28;
+            $plotRight = 700;
+            $pointCount = max($chartValues->count() - 1, 1);
+            $points = $chartValues->values()->map(function ($value, $index) use ($maxValue, $plotTop, $plotBottom, $plotLeft, $plotRight, $pointCount) {
+                $x = $plotLeft + (($plotRight - $plotLeft) * ($index / $pointCount));
+                $y = $plotBottom - (($plotBottom - $plotTop) * ((float) $value / $maxValue));
+
+                return round($x, 2) . ',' . round($y, 2);
+            })->implode(' ');
+        @endphp
+
+        @if($chartValues->count())
+            <div class="salary-chart">
+                <h3>Salary Trend</h3>
+                <p>Net pay history for {{ $employee->name }}</p>
+                <svg width="100%" height="190" viewBox="0 0 720 190" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="28" y1="150" x2="700" y2="150" stroke="#cbd5e1" stroke-width="1"/>
+                    <line x1="28" y1="18" x2="28" y2="150" stroke="#cbd5e1" stroke-width="1"/>
+                    <polyline points="{{ $points }}" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                    @foreach(explode(' ', $points) as $point)
+                        @php [$x, $y] = explode(',', $point); @endphp
+                        <circle cx="{{ $x }}" cy="{{ $y }}" r="5" fill="#ffffff" stroke="#2563eb" stroke-width="3"/>
+                    @endforeach
+                </svg>
+                <div class="chart-caption">
+                    <span>{{ $chartLabels->first() ?? 'Start' }}</span>
+                    <strong>Highest: PHP {{ number_format($maxValue, 2) }}</strong>
+                    <span>{{ $chartLabels->last() ?? 'Latest' }}</span>
+                </div>
+            </div>
+        @endif
 
     </div>
 

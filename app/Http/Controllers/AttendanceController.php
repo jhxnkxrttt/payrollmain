@@ -23,7 +23,17 @@ class AttendanceController extends Controller
             ->orderBy('date', 'desc')
             ->get();
 
-        return view('admin.attendance.index', compact('employees', 'attendance'));
+        $statusCounts = $attendance->countBy('status');
+        $attendanceChart = [
+            'labels' => collect(['present', 'late', 'absent'])
+                ->map(fn ($status) => ucfirst($status))
+                ->values(),
+            'values' => collect(['present', 'late', 'absent'])
+                ->map(fn ($status) => (int) $statusCounts->get($status, 0))
+                ->values(),
+        ];
+
+        return view('admin.attendance.index', compact('employees', 'attendance', 'attendanceChart'));
     }
 
     // STORE
@@ -34,11 +44,14 @@ class AttendanceController extends Controller
             'date' => 'required|date',
             'time_in' => 'nullable|date_format:H:i',
             'time_out' => 'nullable|date_format:H:i',
+            'status' => 'nullable|in:absent',
         ]);
 
         $status = 'late';
 
-        if ($request->time_in) {
+        if ($request->status === 'absent') {
+            $status = 'absent';
+        } elseif ($request->time_in) {
             $timeIn = Carbon::parse($request->time_in);
 
             // assume 8:00 AM start shift
@@ -68,9 +81,19 @@ class AttendanceController extends Controller
             return back()->with('error', 'Attendance not found');
         }
 
+        $request->validate([
+            'employee_id' => 'required|integer',
+            'date' => 'required|date',
+            'time_in' => 'nullable|date_format:H:i',
+            'time_out' => 'nullable|date_format:H:i',
+            'status' => 'nullable|in:absent',
+        ]);
+
         $status = 'late';
 
-        if ($request->time_in) {
+        if ($request->status === 'absent') {
+            $status = 'absent';
+        } elseif ($request->time_in) {
             $timeIn = Carbon::parse($request->time_in);
             $standardTime = Carbon::createFromTime(8, 0);
 

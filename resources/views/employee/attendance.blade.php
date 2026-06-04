@@ -4,6 +4,28 @@
 @section('page-title', 'My Attendance')
 
 @section('content')
+    <section class="panel chart-panel">
+        <div class="section-header">
+            <div>
+                <h2>Attendance Analytics</h2>
+                <p>Your attendance breakdown by present, late, and absent records.</p>
+            </div>
+        </div>
+
+        @if(($attendanceChart['values'] ?? collect())->sum() > 0)
+            <div class="chart-frame">
+                <canvas
+                    class="attendance-status-chart"
+                    data-title="My attendance"
+                    data-labels='@json($attendanceChart["labels"])'
+                    data-values='@json($attendanceChart["values"])'
+                ></canvas>
+            </div>
+        @else
+            <div class="empty-state compact">No attendance analytics are available yet.</div>
+        @endif
+    </section>
+
     <section class="panel">
         <div class="section-header">
             <div>

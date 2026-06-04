@@ -4,6 +4,26 @@
 @section('page-title', 'Payroll History')
 
 @section('content')
+    <section class="panel chart-panel">
+        <div class="section-header">
+            <div>
+                <h2>Salary Analytics</h2>
+                <p>Net salary trend per employee based on generated payroll records.</p>
+            </div>
+        </div>
+
+        @if(($salarySeries ?? collect())->count())
+            <div class="chart-frame large">
+                <canvas
+                    class="salary-multi-line-chart"
+                    data-series='@json($salarySeries)'
+                ></canvas>
+            </div>
+        @else
+            <div class="empty-state compact">No salary analytics yet. Generate payroll to populate the chart.</div>
+        @endif
+    </section>
+
     <section class="panel">
         <div class="section-header">
             <div>

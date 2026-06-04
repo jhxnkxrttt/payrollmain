@@ -26,6 +26,24 @@ class ReportController extends Controller
         $late = DB::table('attendance')->where('status', 'late')->count();
         $absent = DB::table('attendance')->where('status', 'absent')->count();
 
+        $salarySeries = DB::table('payroll')
+            ->join('employees', 'payroll.employee_id', '=', 'employees.id')
+            ->select('payroll.*', 'employees.name')
+            ->orderBy('payroll.paid_date')
+            ->orderBy('payroll.generated_at')
+            ->get()
+            ->groupBy('employee_id')
+            ->map(fn ($items) => [
+                'name' => $items->first()->name,
+                'labels' => $items
+                    ->map(fn ($pay) => $pay->paid_date ?? date('Y-m-d', strtotime($pay->generated_at)))
+                    ->values(),
+                'values' => $items
+                    ->map(fn ($pay) => round((float) $pay->net_pay, 2))
+                    ->values(),
+            ])
+            ->values();
+
         return view('admin.reports.index', compact(
             'totalEmployees',
             'totalPayroll',
@@ -38,7 +56,8 @@ class ReportController extends Controller
             'payrollLateDeductions',
             'present',
             'late',
-            'absent'
+            'absent',
+            'salarySeries'
         ));
     }
 }

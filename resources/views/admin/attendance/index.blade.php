@@ -4,6 +4,28 @@
 @section('page-title', 'Manage Attendance')
 
 @section('content')
+    <section class="panel chart-panel">
+        <div class="section-header">
+            <div>
+                <h2>Attendance Analytics</h2>
+                <p>Team attendance breakdown based on recorded attendance status.</p>
+            </div>
+        </div>
+
+        @if(($attendanceChart['values'] ?? collect())->sum() > 0)
+            <div class="chart-frame">
+                <canvas
+                    class="attendance-status-chart"
+                    data-title="Team attendance"
+                    data-labels='@json($attendanceChart["labels"])'
+                    data-values='@json($attendanceChart["values"])'
+                ></canvas>
+            </div>
+        @else
+            <div class="empty-state compact">No attendance analytics yet. Add attendance records to populate the graph.</div>
+        @endif
+    </section>
+
     <section class="panel">
         <div class="section-header">
             <div>
@@ -31,13 +53,13 @@
             </div>
 
             <div class="form-row">
-                <label for="time_in">🟢 Time In</label>
-                <input type="time" id="time_in" name="time_in" class="time-input">
+                <label for="time_in">Time In</label>
+                <input type="time" id="time_in" name="time_in" class="time-input modern-time-input" data-time-picker>
             </div>
 
             <div class="form-row">
-                <label for="time_out">🔴 Time Out</label>
-                <input type="time" id="time_out" name="time_out" class="time-input">
+                <label for="time_out">Time Out</label>
+                <input type="time" id="time_out" name="time_out" class="time-input modern-time-input" data-time-picker>
             </div>
             
             <div class="form-row">

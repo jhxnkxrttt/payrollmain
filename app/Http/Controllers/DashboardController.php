@@ -77,27 +77,66 @@ class DashboardController extends Controller
     {
         $userId = session('user_id');
 
+        if (!$userId) {
+            return redirect('/');
+        }
+
         $user = DB::table('users')->where('id', $userId)->first();
+
+        if (!$user) {
+            return redirect('/');
+        }
 
         $payslips = DB::table('payroll')
             ->where('employee_id', $user->employee_id)
             ->orderBy('generated_at', 'desc')
             ->get();
 
-        return view('employee.payslips', compact('payslips'));
+        $salaryHistory = $payslips
+            ->sortBy(fn ($pay) => $pay->paid_date ?? $pay->generated_at)
+            ->values();
+
+        $salaryChart = [
+            'labels' => $salaryHistory
+                ->map(fn ($pay) => $pay->paid_date ?? date('Y-m-d', strtotime($pay->generated_at)))
+                ->values(),
+            'values' => $salaryHistory
+                ->map(fn ($pay) => round((float) $pay->net_pay, 2))
+                ->values(),
+        ];
+
+        return view('employee.payslips', compact('payslips', 'salaryChart'));
     }
     public function attendance()
     {
         $userId = session('user_id');
 
+        if (!$userId) {
+            return redirect('/');
+        }
+
         $user = DB::table('users')->where('id', $userId)->first();
+
+        if (!$user) {
+            return redirect('/');
+        }
 
         $logs = DB::table('attendance')
             ->where('employee_id', $user->employee_id)
             ->orderBy('date', 'desc')
             ->get();
 
-        return view('employee.attendance', compact('logs'));
+        $statusCounts = $logs->countBy('status');
+        $attendanceChart = [
+            'labels' => collect(['present', 'late', 'absent'])
+                ->map(fn ($status) => ucfirst($status))
+                ->values(),
+            'values' => collect(['present', 'late', 'absent'])
+                ->map(fn ($status) => (int) $statusCounts->get($status, 0))
+                ->values(),
+        ];
+
+        return view('employee.attendance', compact('logs', 'attendanceChart'));
     }
     public function timeIn()
     {

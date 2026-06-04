@@ -4,6 +4,26 @@
 @section('page-title', 'System Reports')
 
 @section('content')
+    <section class="panel chart-panel">
+        <div class="section-header">
+            <div>
+                <h2>Salary Analytics</h2>
+                <p>Accurate net salary line graph for each employee with generated payroll.</p>
+            </div>
+        </div>
+
+        @if(($salarySeries ?? collect())->count())
+            <div class="chart-frame large">
+                <canvas
+                    class="salary-multi-line-chart"
+                    data-series='@json($salarySeries)'
+                ></canvas>
+            </div>
+        @else
+            <div class="empty-state compact">No payroll salary data has been generated yet.</div>
+        @endif
+    </section>
+
     <section class="report-grid">
         <article class="panel metric-card">
             <span class="metric-label">Employees</span>
