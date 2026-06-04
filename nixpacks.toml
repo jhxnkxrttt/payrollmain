@@ -5,6 +5,7 @@ NIXPACKS_NODE_VERSION = "22"
 [phases.install]
 cmds = [
   "rm -rf vendor bootstrap/cache/*.php",
+  "mkdir -p bootstrap/cache",
   "composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts",
   "npm ci"
 ]
