@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,16 +17,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $userColumns = array_flip(Schema::getColumnListing('users'));
+        $userValues = fn (array $values): array => array_intersect_key($values, $userColumns);
+
         DB::table('users')->updateOrInsert(
             ['email' => 'admin@cafe.com'],
-            [
+            $userValues([
                 'name' => 'Cafe Admin',
                 'employee_id' => null,
                 'password' => Hash::make('admin123'),
                 'role' => 'admin',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
+            ])
         );
 
         $employees = [
@@ -51,14 +55,14 @@ class DatabaseSeeder extends Seeder
 
             DB::table('users')->updateOrInsert(
                 ['email' => $email],
-                [
+                $userValues([
                     'name' => $employee['name'],
                     'employee_id' => $employeeRecord->id,
                     'password' => Hash::make('employee123'),
                     'role' => $employee['position'],
                     'created_at' => now(),
                     'updated_at' => now(),
-                ]
+                ])
             );
         }
     }
