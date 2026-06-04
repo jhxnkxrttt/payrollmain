@@ -1,5 +1,6 @@
 [variables]
 COMPOSER_ALLOW_SUPERUSER = "1"
+NIXPACKS_NODE_VERSION = "22"
 
 [phases.install]
 cmds = [
