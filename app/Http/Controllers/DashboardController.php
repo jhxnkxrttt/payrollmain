@@ -8,29 +8,39 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    public function employee()
+    private function currentUser()
     {
         $userId = session('user_id');
 
         if (!$userId) {
-            return redirect('/');
+            return null;
         }
 
-        $user = DB::table('users')
-            ->where('id', $userId)
-            ->first();
+        return DB::table('users')->where('id', $userId)->first();
+    }
 
-        if (!$user) {
-            return redirect('/');
+    private function currentEmployee()
+    {
+        $user = $this->currentUser();
+
+        if (!$user || !$user->employee_id) {
+            return [null, $user];
         }
 
-        // CRITICAL FIX HERE
         $employee = DB::table('employees')
             ->where('id', $user->employee_id)
             ->first();
 
-        // DEBUG (optional)
-        // dd($user, $employee);
+        return [$employee, $user];
+    }
+
+    public function employee()
+    {
+        [$employee, $user] = $this->currentEmployee();
+
+        if (!$user) {
+            return redirect('/');
+        }
 
         return view('employee.dashboard', compact('employee'));
     }
@@ -57,38 +67,25 @@ class DashboardController extends Controller
 
     public function profile()
     {
-        $userId = session('user_id');
+        [$employee, $user] = $this->currentEmployee();
 
-        if (!$userId) {
+        if (!$user) {
             return redirect('/');
         }
-
-        $user = DB::table('users')
-            ->where('id', $userId)
-            ->first();
-
-        $employee = DB::table('employees')
-            ->where('id', $user->employee_id)
-            ->first();
 
         return view('employee.profile', compact('user', 'employee'));
     }
     public function payslips()
     {
-        $userId = session('user_id');
-
-        if (!$userId) {
-            return redirect('/');
-        }
-
-        $user = DB::table('users')->where('id', $userId)->first();
+        [$employee, $user] = $this->currentEmployee();
 
         if (!$user) {
             return redirect('/');
         }
 
         $payslips = DB::table('payroll')
-            ->where('employee_id', $user->employee_id)
+            ->when($employee, fn ($query) => $query->where('employee_id', $employee->id))
+            ->when(!$employee, fn ($query) => $query->whereRaw('1 = 0'))
             ->orderBy('generated_at', 'desc')
             ->get();
 
@@ -109,20 +106,15 @@ class DashboardController extends Controller
     }
     public function attendance()
     {
-        $userId = session('user_id');
-
-        if (!$userId) {
-            return redirect('/');
-        }
-
-        $user = DB::table('users')->where('id', $userId)->first();
+        [$employee, $user] = $this->currentEmployee();
 
         if (!$user) {
             return redirect('/');
         }
 
         $logs = DB::table('attendance')
-            ->where('employee_id', $user->employee_id)
+            ->when($employee, fn ($query) => $query->where('employee_id', $employee->id))
+            ->when(!$employee, fn ($query) => $query->whereRaw('1 = 0'))
             ->orderBy('date', 'desc')
             ->get();
 
@@ -140,11 +132,14 @@ class DashboardController extends Controller
     }
     public function timeIn()
     {
-        $user = session('user_id');
-        $emp = DB::table('users')->where('id', $user)->first();
+        [$employee, $user] = $this->currentEmployee();
+
+        if (!$user || !$employee) {
+            return redirect('/');
+        }
 
         DB::table('attendance')->insert([
-            'employee_id' => $emp->employee_id,
+            'employee_id' => $employee->id,
             'date' => date('Y-m-d'),
             'time_in' => now(),
             'status' => 'late'
@@ -155,11 +150,14 @@ class DashboardController extends Controller
 
     public function timeOut()
     {
-        $user = session('user_id');
-        $emp = DB::table('users')->where('id', $user)->first();
+        [$employee, $user] = $this->currentEmployee();
+
+        if (!$user || !$employee) {
+            return redirect('/');
+        }
 
         $attendance = DB::table('attendance')
-            ->where('employee_id', $emp->employee_id)
+            ->where('employee_id', $employee->id)
             ->where('date', date('Y-m-d'))
             ->first();
 
@@ -174,7 +172,7 @@ class DashboardController extends Controller
         }
 
         DB::table('attendance')
-            ->where('employee_id', $emp->employee_id)
+            ->where('employee_id', $employee->id)
             ->where('date', date('Y-m-d'))
             ->update([
                 'time_out' => now(),

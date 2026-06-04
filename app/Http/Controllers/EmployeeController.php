@@ -90,6 +90,11 @@ class EmployeeController extends Controller
     // DELETE EMPLOYEE (FIXED NAME)
     public function destroy($id)
     {
+        return $this->delete($id);
+    }
+
+    public function delete($id)
+    {
         DB::table('employees')->where('id', $id)->delete();
 
         // optional: delete user account too
