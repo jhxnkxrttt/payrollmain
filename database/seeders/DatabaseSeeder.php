@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
     {
         $userColumns = array_flip(Schema::getColumnListing('users'));
         $userValues = fn (array $values): array => array_intersect_key($values, $userColumns);
+        $employeeColumns = array_flip(Schema::getColumnListing('employees'));
+        $employeeValues = fn (array $values): array => array_intersect_key($values, $employeeColumns);
 
         DB::table('users')->updateOrInsert(
             ['email' => 'admin@cafe.com'],
@@ -41,13 +43,13 @@ class DatabaseSeeder extends Seeder
         foreach ($employees as $employee) {
             DB::table('employees')->updateOrInsert(
                 ['name' => $employee['name']],
-                [
+                $employeeValues([
                     ...$employee,
                     'hire_date' => '2026-01-01',
                     'status' => 'active',
                     'created_at' => now(),
                     'updated_at' => now(),
-                ]
+                ])
             );
 
             $employeeRecord = DB::table('employees')->where('name', $employee['name'])->first();
