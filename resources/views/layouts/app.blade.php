@@ -5,7 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Cafe Payroll System')</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @php
+        $viteManifestPath = public_path('build/manifest.json');
+        $viteManifest = file_exists($viteManifestPath)
+            ? json_decode(file_get_contents($viteManifestPath), true)
+            : [];
+        $cssAsset = $viteManifest['resources/css/app.css']['file'] ?? null;
+        $jsAsset = $viteManifest['resources/js/app.js']['file'] ?? null;
+        $fallbackCssPath = resource_path('css/design-system.css');
+    @endphp
+
+    @if (file_exists(public_path('hot')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        @if ($cssAsset)
+            <link rel="stylesheet" href="{{ asset('build/'.$cssAsset) }}">
+        @elseif (file_exists($fallbackCssPath))
+            <style>
+                {!! file_get_contents($fallbackCssPath) !!}
+            </style>
+        @endif
+
+        @if ($jsAsset)
+            <script type="module" src="{{ asset('build/'.$jsAsset) }}"></script>
+        @endif
+    @endif
     @yield('styles')
 </head>
 <body>

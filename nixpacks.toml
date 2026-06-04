@@ -1,13 +1,14 @@
 [variables]
 COMPOSER_ALLOW_SUPERUSER = "1"
 NIXPACKS_NODE_VERSION = "22"
+NPM_CONFIG_PRODUCTION = "false"
 
 [phases.install]
 cmds = [
   "rm -rf vendor bootstrap/cache/*.php",
   "mkdir -p bootstrap/cache",
   "composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts",
-  "npm ci"
+  "npm ci --include=dev"
 ]
 
 [phases.build]
