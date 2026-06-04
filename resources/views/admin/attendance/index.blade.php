@@ -31,15 +31,15 @@
             </div>
 
             <div class="form-row">
-                <label for="time_in">Time in</label>
-                <input type="time" id="time_in" name="time_in">
+                <label for="time_in">🟢 Time In</label>
+                <input type="time" id="time_in" name="time_in" class="time-input">
             </div>
 
             <div class="form-row">
-                <label for="time_out">Time out</label>
-                <input type="time" id="time_out" name="time_out">
+                <label for="time_out">🔴 Time Out</label>
+                <input type="time" id="time_out" name="time_out" class="time-input">
             </div>
-
+            
             <div class="form-row">
                 <label for="status">Status</label>
                 <select id="status" name="status">

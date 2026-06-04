@@ -36,11 +36,6 @@
             </div>
 
             <div class="form-row">
-                <label for="amount">Amount</label>
-                <input type="number" name="amount" id="amount" step="0.01" min="0" required>
-            </div>
-
-            <div class="form-row">
                 <label for="description">Description</label>
                 <input type="text" name="description" id="description">
             </div>
@@ -88,27 +83,4 @@
             </table>
         </div>
     </section>
-@endsection
-
-@section('scripts')
-    <script>
-        document.getElementById('type').addEventListener('change', function () {
-            const amount = document.getElementById('amount');
-            const defaults = {
-                SSS: 500,
-                'Pag-IBIG': 200,
-                PhilHealth: 300,
-                Late: 200
-            };
-
-            if (defaults[this.value]) {
-                amount.value = defaults[this.value];
-                amount.readOnly = true;
-                return;
-            }
-
-            amount.value = '';
-            amount.readOnly = false;
-        });
-    </script>
 @endsection

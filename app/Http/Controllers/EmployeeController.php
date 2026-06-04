@@ -22,34 +22,34 @@ class EmployeeController extends Controller
         return view('admin.employees.create');
     }
 
-    // SAVE EMPLOYEE
-   public function store(Request $request)
+    // STORE EMPLOYEE
+    public function store(Request $request)
     {
-        // SAVE EMPLOYEE
+        $request->validate([
+            'name' => 'required|string',
+            'position' => 'required|string',
+            'monthly_salary' => 'required|numeric',
+            'hire_date' => 'required|date',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6'
+        ]);
+
+        // INSERT EMPLOYEE
         $employeeId = DB::table('employees')->insertGetId([
-
             'name' => $request->name,
-
             'position' => $request->position,
-
             'monthly_salary' => $request->monthly_salary,
-
             'hire_date' => $request->hire_date,
-
-            'status' => 'active'
+            'status' => 'active',
+            'created_at' => now()
         ]);
 
         // CREATE USER ACCOUNT
         DB::table('users')->insert([
-
             'employee_id' => $employeeId,
-
             'email' => $request->email,
-
             'password' => Hash::make($request->password),
-
             'role' => $request->position,
-
             'created_at' => now()
         ]);
 
@@ -60,9 +60,7 @@ class EmployeeController extends Controller
     // SHOW EDIT FORM
     public function edit($id)
     {
-        $employee = DB::table('employees')
-            ->where('id', $id)
-            ->first();
+        $employee = DB::table('employees')->where('id', $id)->first();
 
         return view('admin.employees.edit', compact('employee'));
     }
@@ -70,24 +68,34 @@ class EmployeeController extends Controller
     // UPDATE EMPLOYEE
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|string',
+            'position' => 'required|string',
+            'monthly_salary' => 'required|numeric'
+        ]);
+
         DB::table('employees')
             ->where('id', $id)
             ->update([
                 'name' => $request->name,
                 'position' => $request->position,
-                'monthly_salary' => $request->monthly_salary
+                'monthly_salary' => $request->monthly_salary,
+                'updated_at' => now()
             ]);
 
-        return redirect('/admin/employees');
+        return redirect('/admin/employees')
+            ->with('success', 'Employee updated successfully!');
     }
 
-    // DELETE EMPLOYEE
-    public function delete($id)
+    // DELETE EMPLOYEE (FIXED NAME)
+    public function destroy($id)
     {
-        DB::table('employees')
-            ->where('id', $id)
-            ->delete();
+        DB::table('employees')->where('id', $id)->delete();
 
-        return redirect('/admin/employees');
+        // optional: delete user account too
+        DB::table('users')->where('employee_id', $id)->delete();
+
+        return redirect('/admin/employees')
+            ->with('success', 'Employee deleted successfully!');
     }
 }
