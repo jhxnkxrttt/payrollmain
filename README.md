@@ -1,59 +1,209 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ☕ Cafe Payroll Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A web-based Payroll Management System built with Laravel 12 and MySQL that automates employee payroll computation, attendance tracking, deductions, and reporting.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📌 Project Description
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The Cafe Payroll Management System is designed to automate payroll processing for café businesses. It eliminates manual computation errors and improves efficiency in handling employee records, attendance, deductions, and payroll generation.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 👨‍💻 Developers
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+* Agaton, Jhon Kurt V.
+* Esguerra, Diana
+* Cordero, Kerby
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## ⚙️ System Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Employee Module
 
-### Premium Partners
+* View profile
+* View attendance
+* View payslip
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Admin Module
 
-## Contributing
+* Manage employees
+* Manage attendance
+* Manage deductions
+* Generate payroll
+* Export reports
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 💰 Payroll Computation
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Gross Pay
 
-## Security Vulnerabilities
+Gross Pay = Daily Rate × Present Days
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Late Deduction
 
-## License
+Late Deduction = Late Days × (Daily Rate × 0.20)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Net Pay
+
+Net Pay = Gross Pay − Total Deductions
+
+---
+
+## 🗄 Database Tables
+
+* users
+* employees
+* attendance
+* deductions
+* payroll
+
+---
+
+## 🔗 API Endpoints
+
+### Authentication
+
+| Method | Endpoint | Description |
+| ------ | -------- | ----------- |
+| POST   | /login   | User login  |
+| GET    | /logout  | User logout |
+
+### Employees
+
+| Method | Endpoint               | Description            |
+| ------ | ---------------------- | ---------------------- |
+| GET    | /employees             | Get all employees      |
+| GET    | /employees/create      | Employee creation form |
+| POST   | /employees             | Store new employee     |
+| GET    | /employees/{id}/edit   | Edit employee          |
+| POST   | /employees/{id}/update | Update employee        |
+| GET    | /employees/{id}/delete | Delete employee        |
+
+### Attendance
+
+| Method | Endpoint    | Description             |
+| ------ | ----------- | ----------------------- |
+| GET    | /attendance | View attendance records |
+| POST   | /attendance | Store attendance record |
+
+### Payroll
+
+| Method | Endpoint            | Description          |
+| ------ | ------------------- | -------------------- |
+| GET    | /payroll            | View payroll records |
+| POST   | /payroll/generate   | Generate payroll     |
+| GET    | /payroll/export/pdf | Export payroll PDF   |
+
+### API Routes
+
+| Method | Endpoint       |
+| ------ | -------------- |
+| GET    | /api/employees |
+| GET    | /api/payrolls  |
+| POST   | /api/payrolls  |
+
+---
+
+## 🛠 Tech Stack
+
+* Laravel 12
+* PHP 8+
+* MySQL
+* Blade Templates
+* Bootstrap 5
+
+---
+
+## 🚀 Installation
+
+### Clone Project
+
+```bash
+git clone https://github.com/your-repo/cafe-payroll.git
+cd cafe-payroll
+```
+
+### Install Dependencies
+
+```bash
+composer install
+npm install
+```
+
+### Setup Environment
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### Setup Database
+
+Update your `.env` file:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=cafe_payroll
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### Run Migration and Seeder
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+### Run Development Server
+
+```bash
+php artisan serve
+```
+
+Application URL:
+
+```text
+http://127.0.0.1:8000
+```
+
+---
+
+## 📤 Export Features
+
+* PDF Export
+* Payroll Reports
+* Employee Reports
+
+---
+
+## 🌐 Deployment
+
+### Live Demo
+
+https://payrollsystem-production-27de.up.railway.app/
+
+### Hosting Platform
+
+* Railway
+
+---
+
+## 🔐 Default Login
+
+### Admin Account
+
+```text
+Email: admin@cafe.com
+Password: admin123
+```
+
+---
+
+## 📌 License
+
+This project was developed for educational purposes only.
