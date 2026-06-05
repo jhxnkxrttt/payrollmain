@@ -1,12 +1,12 @@
-# ☕ Cafe Payroll Management System
+# ☕ Cafe Payroll Management System 
 
-A web-based Payroll Management System built with Laravel 12 and MySQL that automates employee payroll computation, attendance tracking, deductions, and reporting.
+A web-based Payroll Management System built with Laravel 12 and MySQL that automates employee payroll computation, attendance tracking, deductions, and report generation for café businesses.
 
 ---
 
-## 📌 Project Description
+## 📌 Project Overview
 
-The Cafe Payroll Management System is designed to automate payroll processing for café businesses. It eliminates manual computation errors and improves efficiency in handling employee records, attendance, deductions, and payroll generation.
+The Cafe Payroll Management System is designed to streamline payroll operations by automating employee management, attendance monitoring, deduction calculations, payroll processing, and report generation. The system minimizes manual computation errors and improves overall efficiency in payroll administration.
 
 ---
 
@@ -16,23 +16,29 @@ The Cafe Payroll Management System is designed to automate payroll processing fo
 * Esguerra, Diana
 * Cordero, Kerby
 
+🎓 Course and Section
+
+Bachelor of Science in Information Technology
+Section: III-BSIT-B
+
 ---
 
-## ⚙️ System Features
+## ✨ Features
 
 ### Employee Module
 
-* View profile
-* View attendance
-* View payslip
+* View employee profile
+* View attendance records
+* View payroll information and payslips
 
-### Admin Module
+### Administrator Module
 
-* Manage employees
-* Manage attendance
+* Manage employee records
+* Manage attendance records
 * Manage deductions
 * Generate payroll
-* Export reports
+* View system reports
+* Export payroll reports
 
 ---
 
@@ -40,19 +46,27 @@ The Cafe Payroll Management System is designed to automate payroll processing fo
 
 ### Gross Pay
 
+```text
 Gross Pay = Daily Rate × Present Days
+```
 
 ### Late Deduction
 
-Late Deduction = Late Days × (Daily Rate × 0.20)
+```text
+Late Deduction = Late Days × (Daily Rate × 20%)
+```
 
 ### Net Pay
 
+```text
 Net Pay = Gross Pay − Total Deductions
+```
 
 ---
 
-## 🗄 Database Tables
+## 🗄 Database Structure
+
+The system uses the following database tables:
 
 * users
 * employees
@@ -62,87 +76,71 @@ Net Pay = Gross Pay − Total Deductions
 
 ---
 
-## 🔗 API Endpoints
+## 🔗 API Documentation
 
 ### Authentication
 
 | Method | Endpoint | Description |
 | ------ | -------- | ----------- |
-| POST   | /login   | User login  |
-| GET    | /logout  | User logout |
+| POST   | /login   | User Login  |
+| GET    | /logout  | User Logout |
 
-### Employees
+### Employee API
 
-| Method | Endpoint               | Description            |
-| ------ | ---------------------- | ---------------------- |
-| GET    | /employees             | Get all employees      |
-| GET    | /employees/create      | Employee creation form |
-| POST   | /employees             | Store new employee     |
-| GET    | /employees/{id}/edit   | Edit employee          |
-| POST   | /employees/{id}/update | Update employee        |
-| GET    | /employees/{id}/delete | Delete employee        |
+| Method | Endpoint            | Description                 |
+| ------ | ------------------- | --------------------------- |
+| GET    | /api/employees      | Retrieve all employees      |
+| POST   | /api/employees      | Create a new employee       |
+| GET    | /api/employees/{id} | Retrieve employee details   |
+| PUT    | /api/employees/{id} | Update employee information |
+| DELETE | /api/employees/{id} | Delete an employee          |
 
-### Attendance
 
-| Method | Endpoint    | Description             |
-| ------ | ----------- | ----------------------- |
-| GET    | /attendance | View attendance records |
-| POST   | /attendance | Store attendance record |
+## 🎥 API Demonstration
 
-### Payroll
+Screen recording of API requests and responses:
 
-| Method | Endpoint            | Description          |
-| ------ | ------------------- | -------------------- |
-| GET    | /payroll            | View payroll records |
-| POST   | /payroll/generate   | Generate payroll     |
-| GET    | /payroll/export/pdf | Export payroll PDF   |
-
-### API Routes
-
-| Method | Endpoint       |
-| ------ | -------------- |
-| GET    | /api/employees |
-| GET    | /api/payrolls  |
-| POST   | /api/payrolls  |
+https://drive.google.com/file/d/16cFji9l0XoP_iyzv7hfkwhXyLpqdFLcb/view
 
 ---
 
-## 🛠 Tech Stack
+## 🛠 Technology Stack
 
 * Laravel 12
 * PHP 8+
 * MySQL
 * Blade Templates
 * Bootstrap 5
+* RESTful API
 
 ---
 
-## 🚀 Installation
+## 🚀 Installation Guide
 
-### Clone Project
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-repo/cafe-payroll.git
-cd cafe-payroll
+git clone https://github.com/jhxnkxrttt/payrollmain.git
+cd payrollmain
 ```
 
-### Install Dependencies
+### 2. Install Dependencies
 
 ```bash
 composer install
 npm install
 ```
 
-### Setup Environment
+### 3. Configure Environment
 
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-### Setup Database
+### 4. Configure Database
 
-Update your `.env` file:
+Update the `.env` file:
 
 ```env
 DB_CONNECTION=mysql
@@ -153,13 +151,13 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-### Run Migration and Seeder
+### 5. Run Database Migration and Seeder
 
 ```bash
 php artisan migrate:fresh --seed
 ```
 
-### Run Development Server
+### 6. Start the Development Server
 
 ```bash
 php artisan serve
@@ -173,11 +171,12 @@ http://127.0.0.1:8000
 
 ---
 
-## 📤 Export Features
+## 📊 Reports and Export Features
 
-* PDF Export
 * Payroll Reports
 * Employee Reports
+* PDF Export
+* Attendance Reports
 
 ---
 
@@ -193,9 +192,7 @@ https://payrollmain-production.up.railway.app/
 
 ---
 
-## 🔐 Default Login
-
-### Admin Account
+## 🔐 Default Administrator Account
 
 ```text
 Email: admin@cafe.com
@@ -204,6 +201,6 @@ Password: admin123
 
 ---
 
-## 📌 License
+## 📄 License
 
-This project was developed for educational purposes only.
+This project was developed for educational and academic purposes only.
