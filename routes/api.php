@@ -6,5 +6,3 @@ use App\Http\Controllers\Api\PayrollApiController;
 use App\Http\Controllers\Api\AttendanceApiController;
 
 Route::apiResource('employees', EmployeeApiController::class);
-Route::apiResource('payroll', PayrollApiController::class);
-Route::apiResource('attendances', AttendanceApiController::class);
