@@ -30,6 +30,7 @@ Section: III-BSIT-B
 * View employee profile
 * View attendance records
 * View payroll information and payslips
+* Export payslips PDF
 
 ### Administrator Module
 
@@ -38,13 +39,22 @@ Section: III-BSIT-B
 * Manage deductions
 * Generate payroll
 * View system reports
-* Export payroll reports
 
 ---
 
 ## 💰 Payroll Computation
 
+### Daily Rate
+
+Monthly Salary is divided into 15 working days per cut-off period.
+
+```text
+Daily Rate = Monthly Salary ÷ 15
+```
+
 ### Gross Pay
+
+Gross Pay is calculated based on the employee's present days.
 
 ```text
 Gross Pay = Daily Rate × Present Days
@@ -52,14 +62,36 @@ Gross Pay = Daily Rate × Present Days
 
 ### Late Deduction
 
+Each late day incurs a deduction equivalent to 20% of the employee's daily rate.
+
 ```text
 Late Deduction = Late Days × (Daily Rate × 20%)
+```
+
+### Manual Deductions
+
+Additional deductions selected by the administrator (e.g., Cash Advance, Uniform, Loan, etc.).
+
+```text
+Manual Deduction = Sum of Selected Deductions
+```
+
+### Total Deductions
+
+```text
+Total Deductions = Late Deduction + Manual Deduction
 ```
 
 ### Net Pay
 
 ```text
 Net Pay = Gross Pay − Total Deductions
+```
+
+If Total Deductions exceed Gross Pay, the Net Pay is automatically set to 0.
+
+```text
+Net Pay = Max(Gross Pay − Total Deductions, 0)
 ```
 
 ---
@@ -171,12 +203,75 @@ http://127.0.0.1:8000
 
 ---
 
-## 📊 Reports and Export Features
+## 📊 Reports Module
 
-* Payroll Reports
-* Employee Reports
-* PDF Export
-* Attendance Reports
+The Reports Module provides a centralized analytics dashboard for monitoring employee statistics, payroll summaries, and salary trends within the system.
+
+---
+
+## 📈 Salary Analytics
+
+The system generates a multi-line chart that visualizes the **net salary trends per employee** based on generated payroll records.
+
+### Data Source
+
+* Net Pay per payroll record
+* Grouped by employee
+* Sorted by payroll date
+
+### Visualization
+
+* Multi-line graph per employee
+* X-axis: Payroll dates
+* Y-axis: Net salary amount
+
+---
+
+## 📊 Key Metrics Dashboard
+
+The system displays real-time computed payroll and attendance statistics:
+
+### 👥 Employee Statistics
+
+* Total number of employees
+
+### 💰 Payroll Summary
+
+* Gross Payroll (total earnings before deductions)
+* Net Pay (final salary after deductions)
+* Total Deductions (late + manual deductions)
+* Payroll Runs (number of generated payroll records)
+
+### ⏱ Attendance Summary
+
+* Total Present Days
+* Total Absent Days
+* Total Late Days
+
+### ⚠️ Deduction Summary
+
+* Total Late Deductions
+* Combined manual and system deductions
+
+---
+
+## 📌 Additional Insights
+
+* Present vs Late/Absent comparison
+* Payroll consistency tracking per employee
+* Historical salary trend visualization
+
+---
+
+## 🎯 Purpose
+
+This module helps administrators:
+
+* Monitor payroll expenses
+* Track employee attendance performance
+* Analyze salary trends over time
+* Identify deduction patterns
+* Generate data-driven payroll decisions
 
 ---
 
